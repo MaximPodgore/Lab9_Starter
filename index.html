@@ -86,8 +86,16 @@
       <button>Trigger a Global Error</button>
     </section>
   </main>
-
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "e16695855abb4c9bbec58fd0aa5e1156"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+  <script>
+    TrackJS.track('Testing TrackJS!');
+                        
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -100,9 +108,84 @@
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
+    class ValidationError extends Error {
+    constructor(message) {
+      super(message); // (1)
+      this.name = "ValidationError"; // (2)
+    }
+  }
     // Start your code here
     // You may move this JS to another file if you wish
+    errorBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        switch (btn.textContent) {
+          case 'Console Log':
+            console.log('This is a console log message');
+            break;
+          case 'Console Error':
+            console.error('This is a console error message');
+            break;
+          case 'Console Count':
+            console.count('Counter');
+            break;
+          case 'Console Warn':
+            console.warn('This is a console warning message');
+            break;
+          case 'Console Assert':
+            console.assert(false, 'Assertion failed');
+            break;
+          case 'Console Clear':
+            console.clear();
+            break;
+          case 'Console Dir':
+            console.dir(document.body);
+            break;
+          case 'Console dirxml':
+            console.dirxml(document.body);
+            break;
+          case 'Console Group Start':
+            console.group('Group');
+            console.log('Message 1');
+            console.log('Message 2');
+            console.groupEnd();
+            break;
+          case 'Console Table':
+            console.table([{ name: 'John', age: 30 }, { name: 'Jane', age: 25 }]);
+            break;
+          case 'Start Timer':
+            console.time('Timer');
+            break;
+          case 'End Timer':
+            console.timeEnd('Timer');
+            break;
+          case 'Console Trace':
+            console.trace();
+            break;
+          case 'Trigger a Global Error':
+          try {
+  throw new ValidationError("Whoops!");
+  } catch(err) {
+  alert(err.message); // Whoops!
+  alert(err.name); // ValidationError
+  alert(err.stack); // a list of nested calls with line numbers for each
+  }
+  finally {
+  alert('finally');
+  }
+            break;
+        }
+      });
+    });
+
+  
+
+
+
+  
+  
   </script>
+  
+                          
 </body>
 
 </html>
